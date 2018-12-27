@@ -10,7 +10,6 @@ const tsProject = ts.createProject('tsconfig.json');
 const clean = require('gulp-clean');
 const runSequence = require('run-sequence');
 const process = require("child_process");
-
 const q = require("q");
 
 var paths = {
@@ -19,7 +18,7 @@ var paths = {
 };
 
 gulp.task('clean', () => {
-    return gulp.src(paths.dest, {
+    return gulp.src(`${paths.dest}/**/*.js`, {
             read: false
         })
         .pipe(clean());
@@ -42,14 +41,14 @@ gulp.task('run', callback => {
         // });
         runMainScript()
             .then(() => {
-                done();
+                callback();
             })
             .catch(error => {
                 console.error(error);
             })
             .done(() => {
                 console.log("finally");
-               callback(); 
+                callback();
             });
     });
 });
