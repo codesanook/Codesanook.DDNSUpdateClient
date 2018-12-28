@@ -4,19 +4,23 @@ import IConfiguration from './IConfiguration'
 
 //create configuration.json in dist folder
 const configuration: IConfiguration = require('./configuration.json')
-const defaultTimeoutInMilliseconds:number = 5000;
+const defaultTimeoutInMilliseconds: number = 5000;
 
 async function main() {
     while (true) {
-        let ipAddress = await getRouterIdAddress();
-        let result = await updateNewIP(
-            configuration.username,
-            configuration.password,
-            configuration.hostname,
-            ipAddress
-        );
-        console.log(`result ${result}`);
-        await sleep(1 * 60 * 1000);
+        try {
+            let ipAddress = await getRouterIdAddress();
+            let result = await updateNewIP(
+                configuration.username,
+                configuration.password,
+                configuration.hostname,
+                ipAddress
+            );
+            console.log(`result ${result}`);
+            await sleep(1 * 60 * 1000);
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
 
@@ -106,5 +110,6 @@ function updateNewIP(username: string, password: string, hostname: string, ip: s
     } catch (e) {
         console.log(e);
     } finally {
+        console.log("finally");
     }
 })();
