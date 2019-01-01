@@ -7,20 +7,17 @@ const configuration: IConfiguration = require('./configuration.json')
 const defaultTimeoutInMilliseconds: number = 5000;
 
 async function main() {
-    while (true) {
-        try {
-            let ipAddress = await getRouterIdAddress();
-            let result = await updateNewIP(
-                configuration.username,
-                configuration.password,
-                configuration.hostname,
-                ipAddress
-            );
-            console.log(`result ${result}`);
-            await sleep(1 * 60 * 1000);
-        } catch (e) {
-            console.error(e);
-        }
+    try {
+        let ipAddress = await getRouterIdAddress();
+        let result = await updateNewIP(
+            configuration.username,
+            configuration.password,
+            configuration.hostname,
+            ipAddress
+        );
+        console.log(`result ${result}`);
+    } catch (e) {
+        console.error(e);
     }
 }
 
