@@ -4,15 +4,13 @@ import IConfiguration from './IConfiguration'
 
 //create configuration.json in dist folder
 const configuration: IConfiguration = require('./configuration.json')
-const defaultTimeoutInMilliseconds: number = 5000;
+const defaultTimeoutInMilliseconds: number = 30 * 1000;
 
 async function main() {
     try {
         let ipAddress = await getRouterIdAddress();
         let result = await updateNewIP(
-            configuration.username,
-            configuration.password,
-            configuration.hostname,
+            configuration,
             ipAddress
         );
         console.log(`result ${result}`);
@@ -55,21 +53,17 @@ async function getRouterIdAddress(): Promise<string> {
     return ipAddress;
 }
 
-function sleep(milliseconds: number) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-
-function updateNewIP(username: string, password: string, hostname: string, ip: string): Promise<string> {
+function updateNewIP(configuration: IConfiguration, ip: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        let base64UsernamePassword = Buffer.from(`${username}:${password}`).toString('base64')
+        let base64UsernamePassword = Buffer.from(`${configuration.username}:${configuration.password}`).toString('base64')
         const options = {
             port: 80,
             method: 'GET',
-            path: `/nic/update?hostname=${hostname}&myip=${ip}`,
+            path: `/nic/update?hostname=${configuration.hostname}&myip=${ip}`,
             hostname: 'dynupdate.no-ip.com',
             headers: {
                 'Authorization': `Basic ${base64UsernamePassword}`,
-                'User-Agent': 'CodeSanook.DDNSUpdateClient/v1.0.0 theeranitp@gmail.com'
+                'User-Agent': `CodeSanook.DDNSUpdateClient/v1.0.0 ${configuration.email}`
             }
         };
 
@@ -84,7 +78,7 @@ function updateNewIP(username: string, password: string, hostname: string, ip: s
                 let bodyContent: string;
                 try {
                     bodyContent = Buffer.concat(body).toString();
-                    console.log(`${hostname} updated`);
+                    console.log(`${configuration.hostname} updated`);
                     resolve(bodyContent);
                 } catch (error) {
                     reject(error);

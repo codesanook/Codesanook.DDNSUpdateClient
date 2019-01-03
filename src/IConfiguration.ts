@@ -4,4 +4,5 @@ export default interface Configuration {
     username: string;
     password: string;
     hostname: string;
+    email: string;
 }
