@@ -1,5 +1,8 @@
 # Install "NSSM - the Non-Sucking Service Manager" from chocolatey 
 # choco install nssm -y
+# Create a logs folder
+
+New-Item -Path "logs" -ItemType Directory -ErrorAction Ignore
 
 $projectDir = "C:\projects\CodeSanook.DDNSUpdateClient"
 nssm install UpdateDNS PowerShell -Command "Set-Location '$projectDir'; .\Start-UpdateDNS.ps1"
