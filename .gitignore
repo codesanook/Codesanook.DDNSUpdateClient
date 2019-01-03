@@ -57,3 +57,6 @@ typings/
 
 # ignore output folder
 dist
+
+# ignore logs folder
+logs
