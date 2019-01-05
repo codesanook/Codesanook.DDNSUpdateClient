@@ -20,11 +20,11 @@ nssm set UpdateDNS AppStdout $stdOutFile
 nssm set UpdateDNS AppStderr $stdErrFile
 
 $rotateInDay = 1 * 24 * 60
-$rotateInBytes = 32 * 1024
+$rotateInBytes = 4 * 1024
 nssm set UpdateDNS AppStdoutCreationDisposition 4
 nssm set UpdateDNS AppStderrCreationDisposition 4
 nssm set UpdateDNS AppRotateFiles 1
-nssm set UpdateDNS AppRotateOnline 0
+nssm set UpdateDNS AppRotateOnline 1
 nssm set UpdateDNS AppRotateSeconds $rotateInDay 
 nssm set UpdateDNS AppRotateBytes $rotateInBytes
 
