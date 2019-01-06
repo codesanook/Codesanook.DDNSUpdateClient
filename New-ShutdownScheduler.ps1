@@ -1,9 +1,5 @@
 # Specify the trigger settings in UTC time, the instance need to set time to UTC
-$trigger = New-ScheduledTaskTrigger `
-    -Once `
-    -At '6:50pm' `
-    -RepetitionInterval (New-TimeSpan -Days 1) `
-    -RepetitionDuration (New-TimeSpan -Days (20 * 365)) #Running for with give years
+$trigger = New-ScheduledTaskTrigger -At '6:50pm' -Daily #1.50am BKK time
 
 $user = "NT AUTHORITY\SYSTEM" # Specify the account to run the script
 $utcNow = [System.DateTime]::UtcNow.ToString('yyyy-MM-ddTHH-mm-ssZ')
