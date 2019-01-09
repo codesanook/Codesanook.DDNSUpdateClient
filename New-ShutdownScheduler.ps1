@@ -22,10 +22,10 @@ $trigger = New-ScheduledTaskTrigger -At "6:50pm" -Daily | Disable-SynchronizeTim
 $user = "NT AUTHORITY\SYSTEM" # Specify the account to run the script
 
 $command = {
-    New-Item -Path "c:/logs" -ItemType Directory -Force;
-    $utcNow = [System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH-mm-ssZ")
-    $logName = "shutdown-$utcNow.txt"
-    "Instance shutdown at $utcNow" | Out-File "c:/logs/$logName";
+    New-Item -Path 'c:/logs' -ItemType Directory -Force
+    $utcNow = [System.DateTime]::UtcNow.ToString('yyyy-MM-ddTHH-mm-ssZ')
+    $logName = 'shutdown-{0}.txt' -f $utcNow
+    ('Instance shutdown at {0}' -f $utcNow) | Out-File (Join-Path 'c:/logs' $logName)
     Stop-Computer -Force
 }
 
