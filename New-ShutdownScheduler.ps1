@@ -22,27 +22,33 @@ function Disable-SynchronizeTimeZone {
 }
 
 $command = {
-    $logFilePattern = "c:/logs/shutdown-*" 
-    $logFileLastMoreThanInDays = 30 #Remove log file last more than given day
-    $utcNow = [System.DateTime]::UtcNow
-    $dateTimeFormat = "yyyy-MM-ddTHH-mm-ssZ";
-
-    Get-ChildItem -Path $logFilePattern | Where-Object {
-        $isMatch = $_ -match "(?<dateTime>\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z)"
-        if ($isMatch) {
-            $logFileUtcDateTime = [System.DateTime]::parseexact($matches["dateTime"], $dateTimeFormat, $null)
-            return $logFileUtcDateTime -lt $utcNow.AddDays( -1 * [System.Math]::Abs($logFileLastMoreThanInDays))
-        }
-        return $false
-    } | Remove-Item -Force 
 
     $logPath = "c:/logs"
-    New-Item -Path $logPath -ItemType Directory -Force # New folder if not exist
+    try {
+        $logFilePattern = "c:/logs/shutdown-*" 
+        $logFileLastMoreThanInDays = 30 #Remove log file last more than given day
+        $utcNow = [System.DateTime]::UtcNow
+        $dateTimeFormat = "yyyy-MM-ddTHH-mm-ssZ";
 
-    $logName = "shutdown-$($utcNow.ToString($dateTimeFormat)).txt"
-    ("Instance shutdown at $($utcNow.ToString($dateTimeFormat))") | Out-File (Join-Path -Path $logPath -ChildPath $logName)
+        Get-ChildItem -Path $logFilePattern | Where-Object {
+            $isMatch = $_ -match "(?<dateTime>\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z)"
+            if ($isMatch) {
+                $logFileUtcDateTime = [System.DateTime]::parseexact($matches["dateTime"], $dateTimeFormat, $null)
+                return $logFileUtcDateTime -lt $utcNow.AddDays( -1 * [System.Math]::Abs($logFileLastMoreThanInDays))
+            }
+            return $false
+        } | Remove-Item -Force 
 
-    Stop-Computer -Force
+        New-Item -Path $logPath -ItemType Directory -Force # New folder if not exist
+
+        $logName = "shutdown-$($utcNow.ToString($dateTimeFormat)).txt"
+        ("Instance shutdown at $($utcNow.ToString($dateTimeFormat))") | Out-File (Join-Path -Path $logPath -ChildPath $logName)
+
+        Stop-Computer -Force
+    }
+    catch {
+        $_.Exception | Out-File  "c:\logs\internal-error.txt"
+    }
 }
 
 #TODO comment for this function
