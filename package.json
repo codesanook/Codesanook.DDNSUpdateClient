@@ -14,7 +14,7 @@
         "@types/moment-timezone": "^0.5.9",
         "@types/puppeteer": "^1.6.4",
         "@types/typescript": "^2.0.0",
-        "async": "^2.6.1",
+        "async": "^2.6.4",
         "async.forever": "^0.5.2",
         "gulp": "^3.9.1",
         "gulp-clean": "^0.4.0",
